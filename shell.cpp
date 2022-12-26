@@ -15,11 +15,16 @@ sigjmp_buf ctrlc_buf;
 
 shell::shell(/* args */)
 {
-    cout << "Shell created" << std::endl;
     // TODO read history
+    shell::user = getenv("USER");
+    cout << "Welcome " << shell::user << std::endl;
+    read_history (history_file);
 }
+
 shell::~shell()
 {
+    cout << shell::history_file ;
+    write_history(history_file);
     cout << "Shell destroyed" << std::endl;
 }
 void handle_signals(int signo)

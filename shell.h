@@ -1,10 +1,11 @@
 class shell
 {
 private:
-    std::string history_path = "~/.shell_history";
+    const char * history_file = "shell_history";
+    char * user;
 
 public:
-    shell(/* args */);
+    shell(  );
     ~shell();
     int start();
 };
