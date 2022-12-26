@@ -1,13 +1,12 @@
-#include<iostream>
-#include<bits/stdc++.h>
+#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
 
 class runner
 {
 private:
-    /* data */
 public:
-    runner(/* args */);
+    runner();
     ~runner();
     void help();
     void run(string input);

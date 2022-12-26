@@ -1,13 +1,12 @@
 #include "runner.h"
-#include<iostream>
+#include <iostream>
 #include <unistd.h>
 #include <stdlib.h>
-#include<unistd.h>
-#include<sys/types.h>
-#include<sys/wait.h>
-#include<string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <string.h>
 using namespace std;
-
 
 // r = p
 runner::runner(/* args */)
@@ -56,11 +55,11 @@ void runner::run(string input)
     {
         get_most_repeated_word(args[1]);
     }
-    else if(strcmp(args[0], "des") == 0)
+    else if (strcmp(args[0], "des") == 0)
     {
         delete_empety_spaces(args[1]);
     }
-    else if(strcmp(args[0], "ul") == 0)
+    else if (strcmp(args[0], "ul") == 0)
     {
         get_uncommented_lines(args[1]);
     }
@@ -85,22 +84,22 @@ void runner::run(string input)
         bash(args);
     }
 }
-void runner::bash(char * args[])
+void runner::bash(char *args[])
 {
     pid_t pid = fork();
     if (pid == 0)
     {
-        //child
+        // child
         execvp(args[0], args);
         exit(0);
     }
     else
     {
-        //parent
+        // parent
         wait(NULL);
     }
 }
-void runner::bash_s(char * command)
+void runner::bash_s(char *command)
 {
     pid_t pid = fork();
     if (pid == 0)
@@ -111,44 +110,44 @@ void runner::bash_s(char * command)
     }
     else
     {
-        //parent
+        // parent
         wait(NULL);
     }
 }
 void runner::get_first_word_of_line(char *file)
 {
-    char *args[] = {"cut", file,"-d", " ", "-f", "1", NULL};
+    char *args[] = {"cut", file, "-d", " ", "-f", "1", NULL};
     bash(args);
 }
 void runner::get_most_repeated_word(char *file)
 {
-    //tr -s ' ' '\n' < file | sort | uniq -c | sort -nr | head -n 1
-    //NOT SUR IF IT WORKS
+    // tr -s ' ' '\n' < file | sort | uniq -c | sort -nr | head -n 1
+    // NOT SUR IF IT WORKS
     char command[1000];
     sprintf(command, "tr -s ' ' '\n' < %s | sort | uniq -c | sort -nr | head -n 1 | cut -d ' ' -f 8", file);
     bash_s(command);
 }
-void runner::delete_empety_spaces(char * file)
+void runner::delete_empety_spaces(char *file)
 {
-    //may beteer
+    // may beteer
     char command[1000];
     sprintf(command, "tr -d ' \t\n\r' < %s ", file);
     bash_s(command);
 }
-void runner::get_uncommented_lines(char * file)
+void runner::get_uncommented_lines(char *file)
 {
-    //grep -v '^#' file
+    // grep -v '^#' file
     char *args[] = {"grep", "-o", "'^[^#]*'", file, NULL};
     bash(args);
 }
-void runner::get_line_number(char * file)
+void runner::get_line_number(char *file)
 {
     char *args[] = {"wc", "-l", file, NULL};
     bash(args);
 }
-void runner::get_first_ten_lines(char * file)
+void runner::get_first_ten_lines(char *file)
 {
     char *args[] = {"head", "-n", "10", file, NULL};
     bash(args);
 }
-//std error 
+// std error
