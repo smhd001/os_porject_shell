@@ -3,31 +3,36 @@
 #include<readline/history.h>
 #include<bits/stdc++.h>
 #include "shell.h"
+#include "runner.h"
+
+using namespace std;
 
 shell::shell(/* args */)
 {
-    std::cout << "Shell created" << std::endl;
+    cout << "Shell created" << std::endl;
     //TODO read history
 }
 shell::~shell()
 {
-    std::cout << "Shell destroyed" << std::endl;
+    cout << "Shell destroyed" << std::endl;
 }
 int shell::start()
 {
-    std::cout << "Shell started" << std::endl;
+    cout << "Shell started" << std::endl;
+    runner r = runner();
     while (true)
     {
-        std::string s = std::filesystem::current_path();
-        std::string prompt = s + "\n" + "$> ";
-        std::string str = readline(prompt.c_str());
-        if (str == "exit")
+        string path = filesystem::current_path();
+        string prompt = path + "\n" + "$>";
+        string input = readline(prompt.c_str());
+        if (input == "exit")
         {
             break;
         }
-        else
+        else if(input != "" )
         {
-            add_history(str.c_str());
+            r.run(input);
+            add_history(input.c_str());
         }
     }
 }
