@@ -26,6 +26,18 @@ void parse(char *input, char *args[])
     }
     args[i] = NULL;
 }
+void runner::help()
+{
+    cout << "Commands:" << endl;
+    cout << "fwl file - get first words of lines" << endl;
+    cout << "mrw file - get most repeated word" << endl;
+    cout << "des file - delete empety spaces" << endl;
+    cout << "ul file - get uncommented lines" << endl;
+    cout << "ln file - get line number" << endl;
+    cout << "ftl file - get first ten lines" << endl;
+    cout << "cd dir - change directory" << endl;
+    cout << "exit - exit shell" << endl;
+}
 void runner::run(string input)
 {
     char *args[100];
@@ -40,16 +52,38 @@ void runner::run(string input)
     {
         get_first_word_of_line(args[1]);
     }
-    if (strcmp(args[0], "mrw") == 0)
+    else if (strcmp(args[0], "mrw") == 0)
     {
         get_most_repeated_word(args[1]);
     }
-    if (strcmp(args[0], "cd") == 0)
+    else if(strcmp(args[0], "des") == 0)
+    {
+        delete_empety_spaces(args[1]);
+    }
+    else if(strcmp(args[0], "ul") == 0)
+    {
+        get_uncommented_lines(args[1]);
+    }
+    else if (strcmp(args[0], "ln") == 0)
+    {
+        get_line_number(args[1]);
+    }
+    else if (strcmp(args[0], "ftl") == 0)
+    {
+        get_first_ten_lines(args[1]);
+    }
+    else if (strcmp(args[0], "help") == 0)
+    {
+        help();
+    }
+    else if (strcmp(args[0], "cd") == 0)
     {
         chdir(args[1]);
     }
-    
-    bash(args);
+    else
+    {
+        bash(args);
+    }
 }
 void runner::bash(char * args[])
 {
@@ -66,22 +100,13 @@ void runner::bash(char * args[])
         wait(NULL);
     }
 }
-void runner::get_first_word_of_line(char *file)
+void runner::bash_s(char * command)
 {
-    cout << "Getting first word of line" << endl;
-    char *args[] = {"cut", file,"-d", " ", "-f", "1", NULL};
-    bash(args);
-}
-void runner::get_most_repeated_word(char *file)
-{
-    //tr -s ' ' '\n' < file | sort | uniq -c | sort -nr | head -n 1
-    //NOT SUR IF IT WORKS
-    char command[1000];
     pid_t pid = fork();
     if (pid == 0)
     {
-        sprintf(command, "tr -s ' ' '\n' < %s | sort | uniq -c | sort -nr | head -n 1 | cut -d ' ' -f 8", file);
         system(command);
+        cout << endl;
         exit(0);
     }
     else
@@ -90,3 +115,40 @@ void runner::get_most_repeated_word(char *file)
         wait(NULL);
     }
 }
+void runner::get_first_word_of_line(char *file)
+{
+    char *args[] = {"cut", file,"-d", " ", "-f", "1", NULL};
+    bash(args);
+}
+void runner::get_most_repeated_word(char *file)
+{
+    //tr -s ' ' '\n' < file | sort | uniq -c | sort -nr | head -n 1
+    //NOT SUR IF IT WORKS
+    char command[1000];
+    sprintf(command, "tr -s ' ' '\n' < %s | sort | uniq -c | sort -nr | head -n 1 | cut -d ' ' -f 8", file);
+    bash_s(command);
+}
+void runner::delete_empety_spaces(char * file)
+{
+    //may beteer
+    char command[1000];
+    sprintf(command, "tr -d ' \t\n\r' < %s ", file);
+    bash_s(command);
+}
+void runner::get_uncommented_lines(char * file)
+{
+    //grep -v '^#' file
+    char *args[] = {"grep", "-o", "'^[^#]*'", file, NULL};
+    bash(args);
+}
+void runner::get_line_number(char * file)
+{
+    char *args[] = {"wc", "-l", file, NULL};
+    bash(args);
+}
+void runner::get_first_ten_lines(char * file)
+{
+    char *args[] = {"head", "-n", "10", file, NULL};
+    bash(args);
+}
+//std error 

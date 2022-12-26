@@ -35,4 +35,5 @@ int shell::start()
             add_history(input.c_str());
         }
     }
+    return 0;
 }
