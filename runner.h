@@ -16,6 +16,7 @@ public:
     void get_uncommented_lines(char *file);
     void get_line_number(char *file);
     void get_first_ten_lines(char *file);
-    void bash(char *args[]);
+    void exe(char *args[]);
+    void exe_with_pip(char *args[], char *args2[]);
     void bash_s(char *command);
 };
