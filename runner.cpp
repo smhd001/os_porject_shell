@@ -7,7 +7,8 @@
 #include <sys/wait.h>
 #include <string.h>
 using namespace std;
-
+#define ASCII_RED "\033[0;31m"
+#define ASCII_NORMAL "\033[0m"
 // r = p
 runner::runner(/* args */)
 {
@@ -90,7 +91,10 @@ void runner::bash(char *args[])
     if (pid == 0)
     {
         // child
-        execvp(args[0], args);
+        if (execvp(args[0], args) < 0)
+        {
+            cerr << ASCII_RED << "Error executing command" << ASCII_NORMAL << endl;
+        };
         exit(0);
     }
     else
@@ -104,7 +108,10 @@ void runner::bash_s(char *command)
     pid_t pid = fork();
     if (pid == 0)
     {
-        system(command);
+        if (system(command) < 0)
+        {
+            cerr << ASCII_RED << "Error executing command" << ASCII_NORMAL << endl;
+        };
         cout << endl;
         exit(0);
     }
@@ -121,22 +128,19 @@ void runner::get_first_word_of_line(char *file)
 }
 void runner::get_most_repeated_word(char *file)
 {
-    // tr -s ' ' '\n' < file | sort | uniq -c | sort -nr | head -n 1
-    // NOT SUR IF IT WORKS
     char command[1000];
     sprintf(command, "tr -s ' ' '\n' < %s | sort | uniq -c | sort -nr | head -n 1 | cut -d ' ' -f 8", file);
     bash_s(command);
 }
 void runner::delete_empety_spaces(char *file)
 {
-    // may beteer
     char command[1000];
     sprintf(command, "tr -d ' \t\n\r' < %s ", file);
     bash_s(command);
 }
 void runner::get_uncommented_lines(char *file)
 {
-    // grep -v '^#' file
+    // grep -v '^#' file is a optoin too
     char *args[] = {"grep", "-o", "'^[^#]*'", file, NULL};
     bash(args);
 }
@@ -150,4 +154,3 @@ void runner::get_first_ten_lines(char *file)
     char *args[] = {"head", "-n", "10", file, NULL};
     bash(args);
 }
-// std error

@@ -40,7 +40,7 @@ int shell::start()
     runner r = runner();
     if (signal(SIGINT, handle_signals) == SIG_ERR)
     {
-        printf("failed to register interrupts with kernel\n");
+        cerr << ("failed to register interrupts with kernel\n");
     }
     while (true)
     {
@@ -48,7 +48,7 @@ int shell::start()
             ;
 
         string path = filesystem::current_path();
-        string prompt = path + "\n" + "$>";
+        string prompt = path + "\n" + "$" + shell::user + ">";
         string input = readline(prompt.c_str());
         if (input == "exit")
         {
